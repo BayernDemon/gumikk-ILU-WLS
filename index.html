@@ -6,16 +6,27 @@
   <title>Квиток</title>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
-  <style>
-    .g_id_signin {
-      margin: 40px auto;
-      display: flex;
-      justify-content: center;
-    }
-    #protected-content {
-      display: none;
-    }
-  </style>
+ <style>
+  .g_id_signin {
+    margin: 40px auto;
+    display: flex;
+    justify-content: center;
+  }
+  #protected-content {
+    display: none;
+  }
+  #browser-warning {
+    display: none;
+    text-align: center;
+    padding: 50px;
+    font-family: Roboto, sans-serif;
+    color: white;
+    background-color: #111;
+    height: 100vh;
+    box-sizing: border-box;
+  }
+</style>
+
 
   <!-- Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-2M13308B2V"></script>
@@ -28,16 +39,37 @@
 </head>
 <body>
 
+<div id="browser-warning">
+  <h2>❌ Неможливо відкрити</h2>
+  <p>Будь ласка, відкрийте цю сторінку у звичайному браузері (Chrome, Safari, Firefox).</p>
+</div>
+
+<script>
+  const ua = navigator.userAgent || navigator.vendor || window.opera;
+  const isInAppBrowser =
+    /FBAN|FBAV|Instagram|Twitter|Line|Snapchat|TikTok|Messenger|LinkedIn|Pinterest/i.test(ua) ||
+    (ua.includes("wv") && ua.includes("Android")); // Android WebView
+
+  if (isInAppBrowser) {
+    document.body.innerHTML = '';
+    document.body.appendChild(document.getElementById('browser-warning'));
+    document.getElementById('browser-warning').style.display = 'block';
+  }
+</script>
+
+
   <!-- Google Sign-In SDK -->
   <script src="https://accounts.google.com/gsi/client" async defer></script>
 
   <!-- Кнопка входу Google -->
   <div id="g_id_onload"
-       data-client_id="277201919153-5noo2qtfm7j85vhu9qnn2vu7fhl42ucg.apps.googleusercontent.com"
-       data-context="signin"
-       data-callback="handleCredentialResponse"
-       data-auto_prompt="false">
-  </div>
+     data-client_id="277201919153-5noo2qtfm7j85vhu9qnn2vu7fhl42ucg.apps.googleusercontent.com"
+     data-context="signin"
+     data-callback="handleCredentialResponse"
+     data-auto_prompt="true"
+     data-auto_select="true">
+</div>
+
 
    <div class="g_id_signin"
        data-type="standard"
