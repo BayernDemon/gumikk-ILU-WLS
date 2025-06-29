@@ -104,7 +104,7 @@
   <script>
     function handleCredentialResponse(response) {
       const token = response.credential;
-      const payload = JSON.parse(atob(token.split('.')[1]));
+      const payload = JSON.parse(decodeURIComponent(escape(atob(token.split('.')[1]))));
       const email = payload.email;
 
       // Показ контента
