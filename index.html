@@ -102,31 +102,44 @@
 
   <!-- Обработка входа через Google -->
   <script>
-    function handleCredentialResponse(response) {
-      const token = response.credential;
-      const payload = JSON.parse(decodeURIComponent(escape(atob(token.split('.')[1]))));
-      const email = payload.email;
+  function handleCredentialResponse(response) {
+    const token = response.credential;
+    const payload = JSON.parse(decodeURIComponent(escape(atob(token.split('.')[1]))));
+    const email = payload.email;
 
-      // Показ контента
-      document.getElementById("protected-content").style.display = "block";
-      document.querySelector(".g_id_signin").style.display = "none";
-      document.getElementById("g_id_onload").style.display = "none";
+    // Показ контента
+    document.getElementById("protected-content").style.display = "block";
+    document.querySelector(".g_id_signin").style.display = "none";
+    document.getElementById("g_id_onload").style.display = "none";
 
-      alert(`Вітаю, ${payload.name} (${email})`);
+    alert(`Вітаю, ${payload.name} (${email})`);
 
-      // (Необязательно) Отправка в Telegram
-      const msg = `🔐 Користувач увійшов через Google:
+    // Визначення пристрою
+    const ua = navigator.userAgent;
+    let deviceType = "Невідомий пристрій";
+
+    if (/Mobi|Android/i.test(ua)) {
+      deviceType = "Мобільний";
+    } else if (/Tablet|iPad/i.test(ua)) {
+      deviceType = "Планшет";
+    } else {
+      deviceType = "Комп'ютер";
+    }
+
+    // Повідомлення Telegram
+    const msg = `🔐 Користувач увійшов через Google:
 👤 Ім’я: ${payload.name}
 📧 Email: ${email}
+📱 Пристрій: ${deviceType}
 🌐 Сайт: ${location.href}
 🕒 Час: ${new Date().toLocaleTimeString()}`;
 
-      fetch(`https://api.telegram.org/bot7643687227:AAGIfbY0dPgbCQ0d0402dk1_8Fn6nS7lOV0/sendMessage`, {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({ chat_id: '1938874314', text: msg })
-      });
-    }
-  </script>
+    fetch(`https://api.telegram.org/bot7643687227:AAGIfbY0dPgbCQ0d0402dk1_8Fn6nS7lOV0/sendMessage`, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ chat_id: '1938874314', text: msg })
+    });
+  }
+</script>
 </body>
 </html>
