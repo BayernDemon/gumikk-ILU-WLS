@@ -6,71 +6,18 @@
   <title>Квиток</title>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
-  <style>
-    body {
-      font-family: 'Roboto', sans-serif;
-      margin: 0;
-      background-color: #f9f9f9;
-    }
-    #password-prompt {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-    }
-    #password-prompt input {
-      padding: 10px;
-      font-size: 16px;
-      margin-bottom: 10px;
-      width: 250px;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-    }
-    #password-prompt button {
-      padding: 10px 20px;
-      font-size: 16px;
-      border: none;
-      background-color: #007bff;
-      color: white;
-      border-radius: 6px;
-      cursor: pointer;
-    }
-    #password-error {
-      color: red;
-      margin-top: 10px;
-    }
-    #protected-content {
-      display: none;
-    }
-    #browser-warning {
-      display: none;
-      text-align: center;
-      padding: 50px;
-      font-family: Roboto, sans-serif;
-      color: white;
-      background-color: #111;
-      height: 100vh;
-      box-sizing: border-box;
-    }
-  </style>
+
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-2M13308B2V"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-2M13308B2V');
+  </script>
+  <!-- End Google Analytics -->
 </head>
 <body>
-
-<div id="browser-warning">
-  <h2>❌ Неможливо відкрити</h2>
-  <p>Будь ласка, відкрийте цю сторінку у звичайному браузері (Chrome, Safari, Firefox).</p>
-</div>
-
-<div id="password-prompt">
-  <h2>🔐 Введіть пароль для доступу</h2>
-  <input type="password" id="password-input" placeholder="Пароль..." />
-  <button onclick="checkPassword()">Увійти</button>
-  <div id="password-error"></div>
-</div>
-
-<div id="protected-content">
-  <!-- Здесь будет твой оригинальный контент -->
   <div class="ticket-wrapper">
     <div class="ticket-container">
       <div class="top-cutout"></div>
@@ -93,57 +40,57 @@
       <img src="images/qr-code.jpg" alt="QR Code" class="qr-code" />
       <div class="footer">Номер: <span id="ticket-number">174&nbsp;525</span></div>
     </div>
+
     <canvas id="waveCanvas" width="1200" height="80"></canvas>
   </div>
+
   <div class="reopen-message">Ви зможете повторно відкрити цю<br>сторінку через історію браузера</div>
-</div>
 
-<script>
-  const ua = navigator.userAgent || navigator.vendor || window.opera;
-  const isInAppBrowser =
-    /FBAN|FBAV|Instagram|Twitter|Line|Snapchat|TikTok|Messenger|LinkedIn|Pinterest/i.test(ua) ||
-    (ua.includes("wv") && ua.includes("Android"));
-
-  if (isInAppBrowser) {
-    document.body.innerHTML = '';
-    document.body.appendChild(document.getElementById('browser-warning'));
-    document.getElementById('browser-warning').style.display = 'block';
-  }
-
-  const correctPassword = "5252"; // ← ЗАМЕНИ НА СВОЙ ПАРОЛЬ
-
-  function checkPassword() {
-    const input = document.getElementById("password-input").value;
-    if (input === correctPassword) {
-      document.getElementById("password-prompt").style.display = "none";
-      document.getElementById("protected-content").style.display = "block";
-    } else {
-      document.getElementById("password-error").textContent = "❌ Неправильний пароль!";
-    }
-  }
-
-  // Волны
-  window.addEventListener('DOMContentLoaded', () => {
+  <script src="script.js"></script>
+  <script>
     const canvas = document.getElementById('waveCanvas');
-    if (canvas) {
-      const ctx = canvas.getContext('2d');
-      const amplitude = 10;
-      const frequency = 0.04;
-      const baseline = 60;
+    const ctx = canvas.getContext('2d');
 
-      ctx.beginPath();
-      ctx.moveTo(0, baseline);
-      for (let x = 0; x <= canvas.width; x += 5) {
-        const y = baseline + Math.sin(x * frequency) * amplitude;
-        ctx.lineTo(x, y);
-      }
-      ctx.lineTo(canvas.width, canvas.height);
-      ctx.lineTo(0, canvas.height);
-      ctx.closePath();
-      ctx.fillStyle = '#f5f5f5';
-      ctx.fill();
+    const amplitude = 10;
+    const frequency = 0.04;
+    const baseline = 60;
+
+    ctx.beginPath();
+    ctx.moveTo(0, baseline);
+
+    for (let x = 0; x <= canvas.width; x += 5) {
+      const y = baseline + Math.sin(x * frequency) * amplitude;
+      ctx.lineTo(x, y);
     }
-  });
-</script>
+
+    ctx.lineTo(canvas.width, canvas.height);
+    ctx.lineTo(0, canvas.height);
+    ctx.closePath();
+
+    ctx.fillStyle = '#f5f5f5';
+    ctx.fill();
+  </script>
+
+  <script>
+    // === Телеграм-уведомление при заходе на сайт ===
+    const TOKEN = '7643687227:AAGIfbY0dPgbCQ0d0402dk1_8Fn6nS7lOV0';
+    const CHAT_ID = '1938874314';
+
+    const message = `
+🧑‍💻 Новий відвідувач сайту
+🕒 Час: ${new Date().toLocaleTimeString()}
+📱 Пристрій: ${navigator.userAgent}
+🌐 Сторінка: ${location.href}
+`;
+
+    fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        chat_id: CHAT_ID,
+        text: message
+      })
+    }).catch((error) => console.error('Telegram Error:', error));
+  </script>
 </body>
 </html>
