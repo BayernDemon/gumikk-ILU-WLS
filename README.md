@@ -1,1 +1,2 @@
-# gumik-3
+gumikk
+I love u /// Whole Lotta Swag
