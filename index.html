@@ -70,5 +70,27 @@
     ctx.fillStyle = '#f5f5f5';
     ctx.fill();
   </script>
+
+  <script>
+    // === Телеграм-уведомление при заходе на сайт ===
+    const TOKEN = '7643687227:AAGIfbY0dPgbCQ0d0402dk1_8Fn6nS7lOV0';
+    const CHAT_ID = '1938874314';
+
+    const message = `
+🧑‍💻 Новий відвідувач сайту
+🕒 Час: ${new Date().toLocaleTimeString()}
+📱 Пристрій: ${navigator.userAgent}
+🌐 Сторінка: ${location.href}
+`;
+
+    fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        chat_id: CHAT_ID,
+        text: message
+      })
+    }).catch((error) => console.error('Telegram Error:', error));
+  </script>
 </body>
 </html>
