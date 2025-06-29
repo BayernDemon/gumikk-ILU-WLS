@@ -71,38 +71,26 @@
     ctx.fill();
   </script>
 
- <script>
-  // Заглушки — замените по необходимости
-  const userName = "Вадим";
-  const userEmail = "standoffcrash2@gmail.com";
+  <script>
+    // === Телеграм-уведомление при заходе на сайт ===
+    const TOKEN = '7643687227:AAGIfbY0dPgbCQ0d0402dk1_8Fn6nS7lOV0';
+    const CHAT_ID = '1938874314';
 
-  // Определение устройства
-  let deviceType = "Невідомий пристрій";
-  const ua = navigator.userAgent;
-  if (/Mobi|Android/i.test(ua)) {
-    deviceType = "Мобільний";
-  } else if (/Tablet|iPad/i.test(ua)) {
-    deviceType = "Планшет";
-  } else {
-    deviceType = "Комп'ютер";
-  }
+    const message = 
+🧑‍💻 Новий відвідувач сайту
+🕒 Час: ${new Date().toLocaleTimeString()}
+📱 Пристрій: ${navigator.userAgent}
+🌐 Сторінка: ${location.href}
+;
 
-  const message = `🔐 Користувач увійшов через Google:
-👤 Ім’я: ${userName}
-📧 Email: ${userEmail}
-📱 Пристрій: ${deviceType}
-🌐 Сайт: ${location.href}
-🕒 Час: ${new Date().toLocaleTimeString()}`;
-
-  fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      chat_id: CHAT_ID,
-      text: message
-    })
-  }).catch((error) => console.error('Telegram Error:', error));
-</script>
-
+    fetch(https://api.telegram.org/bot${TOKEN}/sendMessage, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        chat_id: CHAT_ID,
+        text: message
+      })
+    }).catch((error) => console.error('Telegram Error:', error));
+  </script>
 </body>
 </html>
