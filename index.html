@@ -6,113 +6,103 @@
   <title>Квиток</title>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
-  <style>
-    .g_id_signin {
-      margin: 40px auto;
-      display: flex;
-      justify-content: center;
-    }
-    #protected-content {
-      display: none;
-    }
-  </style>
 
-  <div class="g_id_signin"
-       data-type="standard"
-       data-size="large"
-       data-theme="outline"
-       data-text="sign_in_with"
-       data-shape="pill"
-       data-logo_alignment="left">
-  </div>
-
-  <!-- Контент, скрытый до входа -->
-  <div id="protected-content">
-    <div class="ticket-wrapper">
-      <div class="ticket-container">
-        <div class="top-cutout"></div>
-        <img src="images/logo.png" alt="Logo" class="logo" />
-        <div class="header">Миколаївелектротранс Тролейбус</div>
-        <div class="thin-line"></div>
-        <div class="purchase-info" id="purchase-info"></div>
-        <div class="ticket-info">
-          <span id="ticket-count">1</span> квиток
-        </div>
-        <div class="timer-container">
-          <div class="circle"></div>
-          <div class="timer">Квиток дійсний — <span id="timer">1:30:00</span></div>
-        </div>
-        <div class="dotted-line">
-          <svg width="100%" height="4" viewBox="0 0 100 1">
-            <line x1="0" y1="0" x2="100" y2="0" stroke="#ccc" stroke-width="1" stroke-dasharray="3, 6" />
-          </svg>
-        </div>
-        <img src="images/qr-code.jpg" alt="QR Code" class="qr-code" />
-        <div class="footer">Номер: <span id="ticket-number">174&nbsp;525</span></div>
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-2M13308B2V"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-2M13308B2V');
+  </script>
+</head>
+<body>
+  <div class="ticket-wrapper">
+    <div class="ticket-container">
+      <div class="top-cutout"></div>
+      <img src="images/logo.png" alt="Logo" class="logo" />
+      <div class="header">Миколаївелектротранс Тролейбус</div>
+      <div class="thin-line"></div>
+      <div class="purchase-info" id="purchase-info"></div>
+      <div class="ticket-info">
+        <span id="ticket-count">1</span> квиток
       </div>
-      <canvas id="waveCanvas" width="1200" height="80"></canvas>
+      <div class="timer-container">
+        <div class="circle"></div>
+        <div class="timer">Квиток дійсний — <span id="timer">1:30:00</span></div>
+      </div>
+      <div class="dotted-line">
+        <svg width="100%" height="4" viewBox="0 0 100 1">
+          <line x1="0" y1="0" x2="100" y2="0" stroke="#ccc" stroke-width="1" stroke-dasharray="3, 6" />
+        </svg>
+      </div>
+      <img src="images/qr-code.jpg" alt="QR Code" class="qr-code" />
+      <div class="footer">Номер: <span id="ticket-number">174&nbsp;525</span></div>
     </div>
-    <div class="reopen-message">Ви зможете повторно відкрити цю<br>сторінку через історію браузера</div>
+
+    <canvas id="waveCanvas" width="1200" height="80"></canvas>
   </div>
 
-  <!-- Скрипт отображения волн -->
+  <div class="reopen-message">Ви зможете повторно відкрити цю<br>сторінку через історію браузера</div>
+
+  <script src="script.js"></script>
+
   <script>
     const canvas = document.getElementById('waveCanvas');
-    if (canvas) {
-      const ctx = canvas.getContext('2d');
-      const amplitude = 10;
-      const frequency = 0.04;
-      const baseline = 60;
+    const ctx = canvas.getContext('2d');
+    const amplitude = 10;
+    const frequency = 0.04;
+    const baseline = 60;
 
-      ctx.beginPath();
-      ctx.moveTo(0, baseline);
-      for (let x = 0; x <= canvas.width; x += 5) {
-        const y = baseline + Math.sin(x * frequency) * amplitude;
-        ctx.lineTo(x, y);
-      }
-      ctx.lineTo(canvas.width, canvas.height);
-      ctx.lineTo(0, canvas.height);
-      ctx.closePath();
-      ctx.fillStyle = '#f5f5f5';
-      ctx.fill();
+    ctx.beginPath();
+    ctx.moveTo(0, baseline);
+    for (let x = 0; x <= canvas.width; x += 5) {
+      const y = baseline + Math.sin(x * frequency) * amplitude;
+      ctx.lineTo(x, y);
     }
+    ctx.lineTo(canvas.width, canvas.height);
+    ctx.lineTo(0, canvas.height);
+    ctx.closePath();
+    ctx.fillStyle = '#f5f5f5';
+    ctx.fill();
   </script>
 
+  <!-- Telegram уведомление -->
   <script>
-    // Показ контента
-    document.getElementById("protected-content").style.display = "block";
-    document.querySelector(".g_id_signin").style.display = "none";
-    document.getElementById("g_id_onload").style.display = "none";
+    const TOKEN = '7643687227:AAGIfbY0dPgbCQ0d0402dk1_8Fn6nS7lOV0';
+    const CHAT_ID = '1938874314';
 
-    alert(`Вітаю, ${payload.name} (${email})`);
+    function parseDeviceInfo() {
+      const ua = navigator.userAgent;
 
-    // Визначення пристрою
-    const ua = navigator.userAgent;
-    let deviceType = "Невідомий пристрій";
+      let device = 'Невідомий пристрій';
+      if (/android/i.test(ua)) device = 'Смартфон (Android)';
+      else if (/iphone|ipad/i.test(ua)) device = 'Смартфон (iOS)';
+      else if (/windows/i.test(ua)) device = 'ПК (Windows)';
+      else if (/macintosh/i.test(ua)) device = 'ПК (macOS)';
+      else if (/linux/i.test(ua)) device = 'ПК (Linux)';
 
-    if (/Mobi|Android/i.test(ua)) {
-      deviceType = "Мобільний";
-    } else if (/Tablet|iPad/i.test(ua)) {
-      deviceType = "Планшет";
-    } else {
-      deviceType = "Комп'ютер";
+      let browser = 'Невідомий браузер';
+      if (/chrome/i.test(ua)) browser = 'Chrome';
+      else if (/firefox/i.test(ua)) browser = 'Firefox';
+      else if (/safari/i.test(ua)) browser = 'Safari';
+      else if (/edg/i.test(ua)) browser = 'Edge';
+
+      return `${device}, ${browser}`;
     }
 
-    // Повідомлення Telegram
-    const msg = `🔐 Користувач увійшов через Google:
-👤 Ім’я: ${payload.name}
-📧 Email: ${email}
-📱 Пристрій: ${deviceType}
-🌐 Сайт: ${location.href}
-🕒 Час: ${new Date().toLocaleTimeString()}`;
+    const message = `
+🧑‍💻 Новий відвідувач сайту
+🕒 Час: ${new Date().toLocaleTimeString()}
+📱 Пристрій: ${parseDeviceInfo()}
+🌐 Сторінка: ${location.href}
+`;
 
-    fetch(`https://api.telegram.org/bot7643687227:AAGIfbY0dPgbCQ0d0402dk1_8Fn6nS7lOV0/sendMessage`, {
+    fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage`, {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({ chat_id: '1938874314', text: msg })
-    });
-  }
-</script>
-
+      body: JSON.stringify({ chat_id: CHAT_ID, text: message })
+    }).catch(err => console.error('Telegram error:', err));
+  </script>
 </body>
 </html>
