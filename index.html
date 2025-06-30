@@ -17,17 +17,6 @@
     }
   </style>
 
-  <!-- Google Analytics -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-2M13308B2V"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-2M13308B2V');
-  </script>
-</head>
-<body>
-
   <div class="g_id_signin"
        data-type="standard"
        data-size="large"
@@ -89,13 +78,7 @@
     }
   </script>
 
-  <!-- Обработка входа через Google -->
   <script>
-  function handleCredentialResponse(response) {
-    const token = response.credential;
-    const payload = JSON.parse(decodeURIComponent(escape(atob(token.split('.')[1]))));
-    const email = payload.email;
-
     // Показ контента
     document.getElementById("protected-content").style.display = "block";
     document.querySelector(".g_id_signin").style.display = "none";
