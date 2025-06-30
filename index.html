@@ -73,36 +73,23 @@
     const CHAT_ID = '1938874314';
 
     function parseDeviceInfo() {
-    const ua = navigator.userAgent;
+      const ua = navigator.userAgent;
 
-    let device = 'Невідомий пристрій';
-    if (/android/i.test(ua)) device = 'Смартфон (Android)';
-    else if (/iphone|ipad/i.test(ua)) device = 'Смартфон (iOS)';
-    else if (/windows/i.test(ua)) device = 'ПК (Windows)';
-    else if (/macintosh/i.test(ua)) device = 'ПК (macOS)';
-    else if (/linux/i.test(ua)) device = 'ПК (Linux)';
+      let device = 'Невідомий пристрій';
+      if (/android/i.test(ua)) device = 'Смартфон (Android)';
+      else if (/iphone|ipad/i.test(ua)) device = 'Смартфон (iOS)';
+      else if (/windows/i.test(ua)) device = 'ПК (Windows)';
+      else if (/macintosh/i.test(ua)) device = 'ПК (macOS)';
+      else if (/linux/i.test(ua)) device = 'ПК (Linux)';
 
-    let browser = 'Невідомий браузер';
-    if (/chrome/i.test(ua)) browser = 'Chrome';
-    else if (/safari/i.test(ua)) browser = 'Safari';
-    else if (/firefox/i.test(ua)) browser = 'Firefox';
-    else if (/edg/i.test(ua)) browser = 'Edge';
+      let browser = 'Невідомий браузер';
+      if (/chrome/i.test(ua)) browser = 'Chrome';
+      else if (/firefox/i.test(ua)) browser = 'Firefox';
+      else if (/safari/i.test(ua)) browser = 'Safari';
+      else if (/edg/i.test(ua)) browser = 'Edge';
 
-    return `${device}, ${browser}`;
-  }
-
-  const message = `
-🧑‍💻 Новий відвідувач сайту
-🕒 Час: ${new Date().toLocaleTimeString()}
-📱 Пристрій: ${parseDeviceInfo()}
-🌐 Сторінка: ${location.href}
-  `;
-
-  fetch('/.netlify/functions/telegram', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ message })
-  }).catch((e) => console.error('Telegram error:', e));
+      return `${device}, ${browser}`;
+    }
 
     const message = `
 🧑‍💻 Новий відвідувач сайту
