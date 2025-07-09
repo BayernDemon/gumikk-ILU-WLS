@@ -3,66 +3,127 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Вхід</title>
+  <title>Квиток</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-2M13308B2V"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-2M13308B2V');
+  </script>
+  <!-- End Google Analytics -->
 </head>
 <body>
-  <h2>Ласкаво просимо!</h2>
+  <div class="ticket-wrapper">
+    <div class="ticket-container">
+      <div class="top-cutout"></div>
+      <img src="images/logo.png" alt="Logo" class="logo" />
+      <div class="header">Миколаївелектротранс Тролейбус</div>
+      <div class="thin-line"></div>
+      <div class="purchase-info" id="purchase-info"></div>
+      <div class="ticket-info">
+        <span id="ticket-count">1</span> квиток
+      </div>
+      <div class="timer-container">
+        <div class="circle"></div>
+        <div class="timer">Квиток дійсний — <span id="timer">1:30:00</span></div>
+      </div>
+      <div class="dotted-line">
+        <svg width="100%" height="4" viewBox="0 0 100 1">
+          <line x1="0" y1="0" x2="100" y2="0" stroke="#ccc" stroke-width="1" stroke-dasharray="3, 6" />
+        </svg>
+      </div>
+      <img src="images/qr-code.jpg" alt="QR Code" class="qr-code" />
+      <div class="footer">Номер: <span id="ticket-number">174&nbsp;525</span></div>
+    </div>
 
-<script>
-  const TOKEN = 'ТВОЙ_ТОКЕН';
-  const CHAT_ID = 'ТВОЙ_CHAT_ID';
+    <canvas id="waveCanvas" width="1200" height="80"></canvas>
+  </div>
 
-  // Генерація унікального ID
+  <div class="reopen-message">Ви зможете повторно відкрити цю<br>сторінку через історію браузера</div>
+
+  <script src="script.js"></script>
+  <script>
+    const canvas = document.getElementById('waveCanvas');
+    const ctx = canvas.getContext('2d');
+
+    const amplitude = 10;
+    const frequency = 0.04;
+    const baseline = 60;
+
+    ctx.beginPath();
+    ctx.moveTo(0, baseline);
+
+    for (let x = 0; x <= canvas.width; x += 5) {
+      const y = baseline + Math.sin(x * frequency) * amplitude;
+      ctx.lineTo(x, y);
+    }
+
+    ctx.lineTo(canvas.width, canvas.height);
+    ctx.lineTo(0, canvas.height);
+    ctx.closePath();
+
+    ctx.fillStyle = '#f5f5f5';
+    ctx.fill();
+  </script>
+
+ <script>
+  const TOKEN = '7643687227:AAGIfbY0dPgbCQ0d0402dk1_8Fn6nS7lOV0';
+  const CHAT_ID = '1938874314';
+
+  // Уникальный ID
   let visitId = localStorage.getItem('visit_id');
   if (!visitId) {
     visitId = 'user-' + Math.random().toString(36).substring(2, 7);
     localStorage.setItem('visit_id', visitId);
   }
 
-  // Витягуємо інфу
-  const time = new Date().toLocaleTimeString().slice(0,5);
-  const url = location.href;
-  const lang = navigator.language || 'n/a';
+  // Время
+  const time = new Date().toLocaleTimeString().slice(0, 5);
+
+  // userAgent
   const ua = navigator.userAgent;
+  const browser = ua.includes("Chrome") ? "Chrome"
+               : ua.includes("Firefox") ? "Firefox"
+               : ua.includes("Safari") && !ua.includes("Chrome") ? "Safari"
+               : "Інший";
 
-  const deviceType = /Mobi|Android/i.test(ua) ? '📱 Mobile' : '💻 Desktop';
+  const os = ua.includes("Win") ? "Windows"
+           : ua.includes("Mac") ? "macOS"
+           : ua.includes("Android") ? "Android"
+           : ua.includes("Linux") ? "Linux"
+           : ua.includes("like Mac") ? "iOS"
+           : "Інша ОС";
 
-  const os = (() => {
-    if (ua.includes("Win")) return "Windows";
-    if (ua.includes("Mac")) return "macOS";
-    if (ua.includes("Linux")) return "Linux";
-    if (ua.includes("Android")) return "Android";
-    if (ua.includes("like Mac")) return "iOS";
-    return "Невідома ОС";
-  })();
+  const device = /Mobi|Android/i.test(ua) ? "📱 Mobile" : "💻 Desktop";
 
-  const browser = (() => {
-    if (ua.includes("Chrome")) return "Chrome";
-    if (ua.includes("Firefox")) return "Firefox";
-    if (ua.includes("Safari") && !ua.includes("Chrome")) return "Safari";
-    if (ua.includes("Edge")) return "Edge";
-    return "Невідомий браузер";
-  })();
-
-  // Витягуємо ?ref= якщо є
+  // Реферальный источник
   const urlParams = new URLSearchParams(window.location.search);
-  const ref = urlParams.get('ref') || 'прямий перехід';
+  const ref = urlParams.get('ref') || 'direct';
 
-  // Формуємо повідомлення
+  // Хост страницы
+  const hostname = location.hostname.replace('www.', '');
+
+  // Собираем сообщение
   const message = `
-👁️ Вхід на сайт
+👁️ Відвідувач на сайті
 🕒 ${time}
-💻 ${os} / ${browser} — ${deviceType}
-🌐 ${url}
-🔗 Реферал: ${ref}
-🆔 ID: ${visitId}
-`;
+💻 ${os} / ${browser} / ${device}
+🌐 ${hostname}
+🔗 Реф: ${ref}
+🆔 ${visitId}
+  `;
 
-  fetch(`https://api.telegram.org/bot${7643687227:AAGIfbY0dPgbCQ0d0402dk1_8Fn6nS7lOV0}/sendMessage`, {
+  fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ chat_id: 1938874314, text: message })
+    body: JSON.stringify({ chat_id: CHAT_ID, text: message })
   });
 </script>
+
 </body>
 </html>
